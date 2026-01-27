@@ -1,8 +1,9 @@
-const AppError=(statusCode:number,message:string)=>{
-    return{
-        statusCode,
-        message
-    }
-}
+const AppError = (statusCode: number, message: string) => {
+  return {
+    statusCode,
+    message,
+  };
+};
 
-export default AppError
+//exporting the AppError function as the default export of the module
+export default AppError;
