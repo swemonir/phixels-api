@@ -30,8 +30,13 @@ const userCreatedFromDB = async (data: TUser) => {
 
     const result = await User.create(newData);
 
-    // Send verification email
-    await sendVerificationEmail(data.email, verificationCode);
+    // Send verification email (handle errors gracefully)
+    try {
+        await sendVerificationEmail(data.email, verificationCode);
+    } catch (emailError) {
+        console.log('Email sending failed, but user was created:', emailError);
+        // Continue even if email fails
+    }
 
     return {
         result,

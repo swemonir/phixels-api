@@ -14,7 +14,15 @@ const createBlogValidationSchema = z.object({
         details: z.string({
             required_error: "Details are required"
         }),
-        tags: z.array(z.string()).optional()
+            tags: z.preprocess(
+      (val) => {
+        if (typeof val === "string") {
+          return JSON.parse(val); // 🔥 important
+        }
+        return val;
+      },
+      z.array(z.string()).optional()
+    )
     })
 });
 
@@ -24,7 +32,15 @@ const updateBlogValidationSchema = z.object({
         writer: z.string().optional(),
         readingTime: z.string().optional(),
         details: z.string().optional(),
-        tags: z.array(z.string()).optional()
+            tags: z.preprocess(
+      (val) => {
+        if (typeof val === "string") {
+          return JSON.parse(val); // 🔥 important
+        }
+        return val;
+      },
+      z.array(z.string()).optional()
+    )
     })
 });
 

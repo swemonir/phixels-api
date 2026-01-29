@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { TUserRole } from "../Interface/types";
+import { CustomRequest } from "../Interface/request";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../error/appError";
 import httpStatus from 'http-status'
@@ -8,11 +9,19 @@ import { User } from "../module/authentication/auth.model";
 
 const auth = (...requiredRole: TUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const token = req.cookies.token;
+        // Check token in cookie first, then Authorization header
+        let token = req.cookies?.token;
+        
+        if (!token && req.headers.authorization) {
+            const authHeader = req.headers.authorization;
+            if (authHeader.startsWith('Bearer ')) {
+                token = authHeader.substring(7);
+            }
+        }
+        
         if (!token) {
             throw AppError(httpStatus.BAD_REQUEST, 'You Have not authorized')
         }
-
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
 
@@ -34,10 +43,8 @@ const auth = (...requiredRole: TUserRole[]) => {
             throw AppError(httpStatus.BAD_REQUEST, 'Please verify your email first')
         }
 
-        req.user = decoded
+        (req as CustomRequest).user = decoded
         next()
-
-
     })
 }
 

@@ -13,7 +13,19 @@ router.post(
     auth(USER_ROLE.admin),
     upload.single('image'),
     (req, res, next) => {
-        req.body = JSON.parse(JSON.stringify(req.body));
+        // Parse form-data fields properly
+        console.log(req.body);
+        
+        for (const key in req.body) {
+            try {
+                // Try to parse as JSON first (for arrays)
+                req.body[key] = JSON.parse(req.body[key]);
+            } catch (error) {
+                // If not JSON, keep as string
+                req.body[key] = req.body[key];
+            }
+        }
+        console.log('Parsed body:', JSON.stringify(req.body, null, 2));
         next();
     },
     validateRequest(BlogValidation.createBlogValidationSchema),
@@ -29,7 +41,16 @@ router.patch(
     auth(USER_ROLE.admin),
     upload.single('image'),
     (req, res, next) => {
-        req.body = JSON.parse(JSON.stringify(req.body));
+        // Parse form-data fields properly
+        for (const key in req.body) {
+            try {
+                // Try to parse as JSON first (for arrays)
+                req.body[key] = JSON.parse(req.body[key]);
+            } catch (error) {
+                // If not JSON, keep as string
+                req.body[key] = req.body[key];
+            }
+        }
         next();
     },
     validateRequest(BlogValidation.updateBlogValidationSchema),
