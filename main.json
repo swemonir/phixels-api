@@ -864,6 +864,278 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Careers",
+      "item": [
+        {
+          "name": "Get All Careers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/careers",
+              "host": ["{{baseUrl}}"],
+              "path": ["careers"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Careers retrieved successfully\",\n  \"data\": [\n    {\n      \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d5\",\n      \"jobTitle\": \"Senior Frontend Developer\",\n      \"jobType\": \"Full-time\",\n      \"location\": \"Dhaka, Bangladesh\",\n      \"description\": \"We are looking for an experienced frontend developer...\",\n      \"requirements\": [\"5+ years of experience with React\", \"Strong knowledge of TypeScript\"],\n      \"responsibilities\": [\"Develop and maintain web applications\"],\n      \"salaryRange\": \"$60,000 - $80,000\",\n      \"deadline\": \"2024-12-31\",\n      \"applicationEmail\": \"careers@phixels.io\",\n      \"createdAt\": \"2024-01-20T10:30:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Career",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/careers/64f8a1b2c3d4e5f6a7b8c9d5",
+              "host": ["{{baseUrl}}"],
+              "path": ["careers", "64f8a1b2c3d4e5f6a7b8c9d5"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Career retrieved successfully\",\n  \"data\": {\n    \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d5\",\n    \"jobTitle\": \"Senior Frontend Developer\",\n    \"jobType\": \"Full-time\",\n    \"location\": \"Dhaka, Bangladesh\",\n    \"description\": \"We are looking for an experienced frontend developer...\",\n    \"requirements\": [\"5+ years of experience with React\", \"Strong knowledge of TypeScript\"],\n    \"responsibilities\": [\"Develop and maintain web applications\"],\n    \"salaryRange\": \"$60,000 - $80,000\",\n    \"deadline\": \"2024-12-31\",\n    \"applicationEmail\": \"careers@phixels.io\",\n    \"createdAt\": \"2024-01-20T10:30:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Career (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobTitle\": \"Senior Frontend Developer\",\n  \"jobType\": \"Full-time\",\n  \"location\": \"Dhaka, Bangladesh\",\n  \"description\": \"We are looking for an experienced frontend developer to join our team.\",\n  \"requirements\": [\n    \"5+ years of experience with React\",\n    \"Strong knowledge of TypeScript\",\n    \"Experience with modern CSS frameworks\"\n  ],\n  \"responsibilities\": [\n    \"Develop and maintain web applications\",\n    \"Collaborate with design team\",\n    \"Write clean and maintainable code\"\n  ],\n  \"salaryRange\": \"$60,000 - $80,000\",\n  \"deadline\": \"2024-12-31\",\n  \"applicationEmail\": \"careers@phixels.io\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/careers",
+              "host": ["{{baseUrl}}"],
+              "path": ["careers"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Career created successfully\",\n  \"data\": {\n    \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d5\",\n    \"jobTitle\": \"Senior Frontend Developer\",\n    \"jobType\": \"Full-time\",\n    \"location\": \"Dhaka, Bangladesh\",\n    \"description\": \"We are looking for an experienced frontend developer...\",\n    \"requirements\": [\"5+ years of experience with React\", \"Strong knowledge of TypeScript\"],\n    \"responsibilities\": [\"Develop and maintain web applications\"],\n    \"salaryRange\": \"$60,000 - $80,000\",\n    \"deadline\": \"2024-12-31\",\n    \"applicationEmail\": \"careers@phixels.io\",\n    \"createdAt\": \"2024-01-20T10:30:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Career (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobTitle\": \"Updated Job Title\",\n  \"salaryRange\": \"$70,000 - $90,000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/careers/64f8a1b2c3d4e5f6a7b8c9d5",
+              "host": ["{{baseUrl}}"],
+              "path": ["careers", "64f8a1b2c3d4e5f6a7b8c9d5"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Career updated successfully\",\n  \"data\": {\n    \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d5\",\n    \"jobTitle\": \"Updated Job Title\",\n    \"jobType\": \"Full-time\",\n    \"location\": \"Dhaka, Bangladesh\",\n    \"description\": \"We are looking for an experienced frontend developer...\",\n    \"requirements\": [\"5+ years of experience with React\", \"Strong knowledge of TypeScript\"],\n    \"responsibilities\": [\"Develop and maintain web applications\"],\n    \"salaryRange\": \"$70,000 - $90,000\",\n    \"deadline\": \"2024-12-31\",\n    \"applicationEmail\": \"careers@phixels.io\",\n    \"updatedAt\": \"2024-01-20T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Career (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/careers/64f8a1b2c3d4e5f6a7b8c9d5",
+              "host": ["{{baseUrl}}"],
+              "path": ["careers", "64f8a1b2c3d4e5f6a7b8c9d5"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Career deleted successfully\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Case Studies",
+      "item": [
+        {
+          "name": "Get All Case Studies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/case-studies",
+              "host": ["{{baseUrl}}"],
+              "path": ["case-studies"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Case Studies retrieved successfully\",\n  \"data\": [\n    {\n      \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d6\",\n      \"title\": \"E-commerce Platform Redesign\",\n      \"client\": \"TechMart Solutions\",\n      \"category\": \"Web Development\",\n      \"challenge\": \"The client needed a modern, responsive e-commerce platform...\",\n      \"solution\": \"We developed a custom React-based e-commerce solution...\",\n      \"result\": \"Increased conversion rates by 40%, improved page load speed by 60%...\",\n      \"image\": \"https://example.com/case-study-image.jpg\",\n      \"link\": \"https://example.com/case-study\",\n      \"createdAt\": \"2024-01-20T10:30:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Case Study",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/case-studies/64f8a1b2c3d4e5f6a7b8c9d6",
+              "host": ["{{baseUrl}}"],
+              "path": ["case-studies", "64f8a1b2c3d4e5f6a7b8c9d6"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Case Study retrieved successfully\",\n  \"data\": {\n    \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d6\",\n    \"title\": \"E-commerce Platform Redesign\",\n    \"client\": \"TechMart Solutions\",\n    \"category\": \"Web Development\",\n    \"challenge\": \"The client needed a modern, responsive e-commerce platform...\",\n    \"solution\": \"We developed a custom React-based e-commerce solution...\",\n    \"result\": \"Increased conversion rates by 40%, improved page load speed by 60%...\",\n    \"image\": \"https://example.com/case-study-image.jpg\",\n    \"link\": \"https://example.com/case-study\",\n    \"createdAt\": \"2024-01-20T10:30:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Case Study (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"E-commerce Platform Redesign\",\n  \"client\": \"TechMart Solutions\",\n  \"category\": \"Web Development\",\n  \"challenge\": \"The client needed a modern, responsive e-commerce platform with improved user experience and performance.\",\n  \"solution\": \"We developed a custom React-based e-commerce solution with optimized performance, modern UI/UX design, and seamless payment integration.\",\n  \"result\": \"Increased conversion rates by 40%, improved page load speed by 60%, and enhanced user satisfaction scores.\",\n  \"image\": \"https://example.com/case-study-image.jpg\",\n  \"link\": \"https://example.com/case-study\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/case-studies",
+              "host": ["{{baseUrl}}"],
+              "path": ["case-studies"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Case Study created successfully\",\n  \"data\": {\n    \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d6\",\n    \"title\": \"E-commerce Platform Redesign\",\n    \"client\": \"TechMart Solutions\",\n    \"category\": \"Web Development\",\n    \"challenge\": \"The client needed a modern, responsive e-commerce platform...\",\n    \"solution\": \"We developed a custom React-based e-commerce solution...\",\n    \"result\": \"Increased conversion rates by 40%, improved page load speed by 60%...\",\n    \"image\": \"https://example.com/case-study-image.jpg\",\n    \"link\": \"https://example.com/case-study\",\n    \"createdAt\": \"2024-01-20T10:30:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Case Study (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Case Study Title\",\n  \"result\": \"Updated results with new metrics\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/case-studies/64f8a1b2c3d4e5f6a7b8c9d6",
+              "host": ["{{baseUrl}}"],
+              "path": ["case-studies", "64f8a1b2c3d4e5f6a7b8c9d6"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Case Study updated successfully\",\n  \"data\": {\n    \"_id\": \"64f8a1b2c3d4e5f6a7b8c9d6\",\n    \"title\": \"Updated Case Study Title\",\n    \"client\": \"TechMart Solutions\",\n    \"category\": \"Web Development\",\n    \"challenge\": \"The client needed a modern, responsive e-commerce platform...\",\n    \"solution\": \"We developed a custom React-based e-commerce solution...\",\n    \"result\": \"Updated results with new metrics\",\n    \"image\": \"https://example.com/case-study-image.jpg\",\n    \"link\": \"https://example.com/case-study\",\n    \"updatedAt\": \"2024-01-20T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Case Study (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/case-studies/64f8a1b2c3d4e5f6a7b8c9d6",
+              "host": ["{{baseUrl}}"],
+              "path": ["case-studies", "64f8a1b2c3d4e5f6a7b8c9d6"]
+            }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"statusCode\": 200,\n  \"message\": \"Case Study deleted successfully\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "phixels-api-collection",
+		"name": "Phixels API - Career & Case Study",
+		"description": "API endpoints for Career and Case Study modules",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Careers",
+			"item": [
+				{
+					"name": "Get All Careers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/careers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "careers"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Career",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/careers/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "careers", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "career-id-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Career (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"jobTitle\": \"Senior Frontend Developer\",\n  \"jobType\": \"Full-time\",\n  \"location\": \"Dhaka, Bangladesh\",\n  \"description\": \"We are looking for an experienced frontend developer to join our team.\",\n  \"requirements\": [\n    \"5+ years of experience with React\",\n    \"Strong knowledge of TypeScript\",\n    \"Experience with modern CSS frameworks\"\n  ],\n  \"responsibilities\": [\n    \"Develop and maintain web applications\",\n    \"Collaborate with design team\",\n    \"Write clean and maintainable code\"\n  ],\n  \"salaryRange\": \"$60,000 - $80,000\",\n  \"deadline\": \"2024-12-31\",\n  \"applicationEmail\": \"careers@phixels.io\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/careers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "careers"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Career (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"jobTitle\": \"Updated Job Title\",\n  \"salaryRange\": \"$70,000 - $90,000\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/careers/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "careers", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "career-id-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Career (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/careers/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "careers", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "career-id-here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Case Studies",
+			"item": [
+				{
+					"name": "Get All Case Studies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/case-studies",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "case-studies"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Case Study",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/case-studies/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "case-studies", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "case-study-id-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Case Study (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"E-commerce Platform Redesign\",\n  \"client\": \"TechMart Solutions\",\n  \"category\": \"Web Development\",\n  \"challenge\": \"The client needed a modern, responsive e-commerce platform with improved user experience and performance.\",\n  \"solution\": \"We developed a custom React-based e-commerce solution with optimized performance, modern UI/UX design, and seamless payment integration.\",\n  \"result\": \"Increased conversion rates by 40%, improved page load speed by 60%, and enhanced user satisfaction scores.\",\n  \"image\": \"https://example.com/case-study-image.jpg\",\n  \"link\": \"https://example.com/case-study\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/case-studies",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "case-studies"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Case Study (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Case Study Title\",\n  \"result\": \"Updated results with new metrics\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/case-studies/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "case-studies", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "case-study-id-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Case Study (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/case-studies/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "case-studies", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "case-study-id-here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "your-admin-jwt-token-here",
+			"type": "string"
+		}
+	]
+}
