@@ -4,6 +4,7 @@ import { User } from "./auth.model";
 import httpStatus from "http-status";
 import { createToken, generateVerificationCode, sendVerificationEmail } from "./auth.utils";
 import bcrypt from "bcrypt";
+import config from "../../config";
 
 const userCreatedFromDB = async (data: TUser) => {
     const user = await User.findOne({ email: data.email });
@@ -26,7 +27,7 @@ const userCreatedFromDB = async (data: TUser) => {
         role: data.role
     };
 
-    const accessToken = createToken(jwtPayloads, process.env.JWT_SECRET as string, 100);
+    const accessToken = createToken(jwtPayloads, config.JWT_SECRET as string, 100);
 
     const result = await User.create(newData);
 
@@ -66,7 +67,7 @@ const loginUser = async (data: { email: string, password: string }) => {
     };
     const hours = 48;
     const expiresIn = 3600 * hours;
-    const accessToken = createToken(jwtPayloads, process.env.JWT_SECRET as string, expiresIn);
+    const accessToken = createToken(jwtPayloads, config.JWT_SECRET as string, expiresIn);
 
      const datas = await User.findOne({ email: data.email }).select('-password -verificationCode -__v');
 

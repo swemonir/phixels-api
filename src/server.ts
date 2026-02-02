@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import app from "./app";
+import config from "./app/config";
 
-const port = process.env.PORT || 5001;
+const port = config.PORT || 5001;
 
 async function main() {
     try {
-        await mongoose.connect(process.env.MONGO_URL as string);
+        await mongoose.connect(config.MONGO_URL as string);
         console.log('Connected to MongoDB');
 
         app.listen(port, () => {

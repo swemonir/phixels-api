@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import config from '../../config';
 
 export const createToken = (
     jwtPayloads: { email: string; role: string },
@@ -22,13 +23,13 @@ export const sendVerificationEmail = async (email: string, code: string) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
+            user: config.NODE_MILER_USER,
+            pass: config.NODE_MILER_PASS
         }
     });
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: config.NODE_MILER_USER,
         to: email,
         subject: 'Email Verification Code',
         text: `Your verification code is: ${code}`

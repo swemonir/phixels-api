@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import config from '../../config';
 
 // Email configuration interface
 export interface EmailOptions {
@@ -19,12 +20,12 @@ export interface EmailOptions {
 // Create reusable transporter
 const createTransporter = () => {
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    host: config.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(config.SMTP_PORT || '587'),
+    secure: config.SMTP_SECURE === 'true', // true for 465, false for other ports
     auth: {
-      user: process.env.NODE_MILER_USER,
-      pass: process.env.NODE_MILER_PASS,
+      user: config.NODE_MILER_USER,
+      pass: config.NODE_MILER_PASS,
     },
   });
 };
@@ -35,7 +36,7 @@ export const SendMail = async (options: EmailOptions): Promise<boolean> => {
     const transporter = createTransporter();
 
     const mailOptions = {
-      from: options.from || process.env.NODE_MILER_USER,
+      from: options.from || config.NODE_MILER_USER,
       to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
       subject: options.subject,
       text: options.text,

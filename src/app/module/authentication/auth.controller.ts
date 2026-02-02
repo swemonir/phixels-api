@@ -2,12 +2,13 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { UserService } from "./auth.service";
 import httpStatus from 'http-status'
+import config from "../../config";
 
 const userCreated = catchAsync(async (req, res) => {
     const {result, accessToken} = await UserService.userCreatedFromDB(req.body);
     res.cookie('token', accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: config.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 100 * 1000 // 100 seconds
     });
@@ -26,7 +27,7 @@ const userLogin=catchAsync(async (req, res) => {
     const {accessToken,user}=await UserService.loginUser(req.body)
     res.cookie('token', accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: config.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 48 * 60 * 60 * 1000 // 48 hours
     });
