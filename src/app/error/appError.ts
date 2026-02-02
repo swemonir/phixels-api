@@ -1,9 +1,17 @@
-const AppError = (statusCode: number, message: string) => {
-  return {
-    statusCode,
-    message,
-  };
-};
+class AppError extends Error {
+  public statusCode: number;
 
-//exporting the AppError function as the default export of the module
+  constructor(statusCode: number, message: string, stack = '') {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = 'AppError';
+
+    if (stack) {
+      this.stack = stack;
+    } else {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
+
 export default AppError;

@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 const userCreatedFromDB = async (data: TUser) => {
     const user = await User.findOne({ email: data.email });
     if (user) {
-        throw AppError(httpStatus.BAD_REQUEST, "Email is already exist");
+        throw new AppError(httpStatus.BAD_REQUEST, "Email is already exist");
     }
 
     const password = await bcrypt.hash(data.password, 10);
@@ -47,17 +47,17 @@ const userCreatedFromDB = async (data: TUser) => {
 const loginUser = async (data: { email: string, password: string }) => {
     const user = await User.findOne({ email: data.email });
     if (!user) {
-        throw AppError(httpStatus.BAD_REQUEST, "Email is not exist");
+        throw new AppError(httpStatus.BAD_REQUEST, "Email is not exist");
     }
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-        throw AppError(httpStatus.BAD_REQUEST, "Password is not valid");
+        throw new AppError(httpStatus.BAD_REQUEST, "Password is not valid");
     }
     if (user.isDeleted) {
-        throw AppError(httpStatus.BAD_REQUEST, "User is deleted");
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted");
     }
     if (!user.isVerified) {
-        throw AppError(httpStatus.BAD_REQUEST, "Please verify your email first");
+        throw new AppError(httpStatus.BAD_REQUEST, "Please verify your email first");
     }
 
     const jwtPayloads = {
@@ -68,7 +68,7 @@ const loginUser = async (data: { email: string, password: string }) => {
     const expiresIn = 3600 * hours;
     const accessToken = createToken(jwtPayloads, process.env.JWT_SECRET as string, expiresIn);
 
-     const datas = await User.findOne({ email: data.email }).select('-password -verificationCode -__v');
+    const datas = await User.findOne({ email: data.email }).select('-password -verificationCode -__v');
 
     return {
         accessToken,
@@ -79,10 +79,10 @@ const loginUser = async (data: { email: string, password: string }) => {
 const verifyEmail = async (email: string, code: string) => {
     const user = await User.findOne({ email, verificationCode: code });
     if (!user) {
-        throw AppError(httpStatus.BAD_REQUEST, "Invalid verification code");
+        throw new AppError(httpStatus.BAD_REQUEST, "Invalid verification code");
     }
     if (user.isVerified) {
-        throw AppError(httpStatus.BAD_REQUEST, "Email already verified");
+        throw new AppError(httpStatus.BAD_REQUEST, "Email already verified");
     }
 
     user.isVerified = true;

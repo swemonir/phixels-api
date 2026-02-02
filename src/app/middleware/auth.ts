@@ -11,36 +11,36 @@ const auth = (...requiredRole: TUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         // Check token in cookie first, then Authorization header
         let token = req.cookies?.token;
-        
+
         if (!token && req.headers.authorization) {
             const authHeader = req.headers.authorization;
             if (authHeader.startsWith('Bearer ')) {
                 token = authHeader.substring(7);
             }
         }
-        
+
         if (!token) {
-            throw AppError(httpStatus.BAD_REQUEST, 'You Have not authorized')
+            throw new AppError(httpStatus.BAD_REQUEST, 'You Have not authorized')
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
 
         const { email, role, iat, exp } = decoded
         if (requiredRole && !requiredRole.includes(role)) {
-            throw AppError(httpStatus.FORBIDDEN, 'You are not allowed to access this route')
+            throw new AppError(httpStatus.FORBIDDEN, 'You are not allowed to access this route')
         }
 
         const user = await User.findOne({ email })
         if (!user) {
-            throw AppError(httpStatus.BAD_REQUEST, 'User not found')
+            throw new AppError(httpStatus.BAD_REQUEST, 'User not found')
         }
 
         if (user.isDeleted) {
-            throw AppError(httpStatus.BAD_REQUEST, 'User is deleted')
+            throw new AppError(httpStatus.BAD_REQUEST, 'User is deleted')
         }
 
         if (!user.isVerified) {
-            throw AppError(httpStatus.BAD_REQUEST, 'Please verify your email first')
+            throw new AppError(httpStatus.BAD_REQUEST, 'Please verify your email first')
         }
 
         (req as CustomRequest).user = decoded
