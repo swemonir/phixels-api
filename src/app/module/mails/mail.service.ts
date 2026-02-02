@@ -40,7 +40,7 @@ const sendFormalMail = async (data: TMailRequest) => {
                 error: 'Email sending failed'
             });
 
-            throw AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to send email");
+            throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to send email");
         }
 
         // Log successful attempt to database
@@ -69,7 +69,7 @@ const sendFormalMail = async (data: TMailRequest) => {
             error: error.message || 'Unknown error'
         });
 
-        throw AppError(httpStatus.INTERNAL_SERVER_ERROR, error.message || "Failed to send email");
+        throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, error.message || "Failed to send email");
     }
 };
 

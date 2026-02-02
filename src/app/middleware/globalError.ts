@@ -17,17 +17,25 @@ const globalError: ErrorRequestHandler = (err, req, res, next) => {
 
         }
     ]
-    if (err.name === 'ValidationError') {
-        const validationErrors = validationError(err)
-        statusCode = validationErrors?.statusCode
-        message = validationErrors?.message
-        errorSource = validationErrors?.errorSource
-    }
-    else if (err instanceof ZodError) {
+    // Log error for server-side debugging
+    console.error('------- API Error Start -------');
+    console.error('Time:', new Date().toISOString());
+    console.error('Path:', req.path);
+    console.error('Method:', req.method);
+    console.error('Error:', err);
+    console.error('------- API Error End -------');
+
+    if (err instanceof ZodError) {
         const zodErrors = zodError(err)
         statusCode = zodErrors?.statusCode
         message = zodErrors?.message
         errorSource = zodErrors?.errorSource
+    }
+    else if (err.name === 'ValidationError') {
+        const validationErrors = validationError(err)
+        statusCode = validationErrors?.statusCode
+        message = validationErrors?.message
+        errorSource = validationErrors?.errorSource
     }
     else if (err.name === 'CastError') {
         const castErrors = castError(err)
@@ -41,19 +49,21 @@ const globalError: ErrorRequestHandler = (err, req, res, next) => {
         message = duplicateErrors?.message
         errorSource = duplicateErrors?.errorSource
     }
+    else if (err instanceof AppError) {
+        statusCode = err.statusCode
+        message = err.message
+        errorSource = [
+            {
+                path: 'App Error',
+                message: err.message
+            }
+        ]
+    }
     else if (err instanceof Error) {
         message = err.message
         errorSource = [
             {
                 path: 'Error',
-                message: err.message
-            }
-        ]
-    } else if (err.name === 'AppError') {
-        message = err.message
-        errorSource = [
-            {
-                path: 'App Error',
                 message: err.message
             }
         ]
