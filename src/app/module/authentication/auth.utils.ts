@@ -22,13 +22,13 @@ export const sendVerificationEmail = async (email: string, code: string) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
+            user: process.env.NODE_MILER_USER,
+            pass: process.env.NODE_MILER_PASS
         }
     });
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: process.env.NODE_MILER_USER,
         to: email,
         subject: 'Email Verification Code',
         text: `Your verification code is: ${code}`

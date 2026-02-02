@@ -12,7 +12,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    credentials: true
+    origin: ['http://localhost:5173', 'https://rurally-unparticular-lilliana.ngrok-free.dev'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
 }));
 app.use(cookieParser());
 
