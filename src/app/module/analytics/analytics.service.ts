@@ -30,6 +30,9 @@ const resolveDateRange = (params: TRangeParams) => {
     return { start, end, range: 'custom' };
   }
   const key = (params.range || '7d').toLowerCase();
+  if (key === 'all') {
+    return { start: new Date(0), end: now, range: 'all' };
+  }
   const duration = RANGE_TO_MS[key] ?? RANGE_TO_MS['7d'];
   return { start: new Date(now.getTime() - duration), end: now, range: key };
 };

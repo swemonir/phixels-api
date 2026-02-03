@@ -1136,6 +1136,104 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Track Events",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventType\": \"page_view\",\n  \"sessionId\": \"uuid\",\n  \"pagePath\": \"/\",\n  \"referrer\": \"\",\n  \"utmSource\": \"\",\n  \"utmMedium\": \"\",\n  \"utmCampaign\": \"\",\n  \"deviceType\": \"desktop\",\n  \"channel\": \"whatsapp\",\n  \"metadata\": {},\n  \"eventAt\": \"2026-02-03T12:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/analytics/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "events"]
+            }
+          }
+        },
+        {
+          "name": "Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/overview?range=all",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "overview"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "all",
+                  "description": "range=1h|1d|3d|7d|1m|3m|6m|1y|all"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Overview (Custom Range)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/overview?start=2026-01-01&end=2026-02-03",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "overview"],
+              "query": [
+                {
+                  "key": "start",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "end",
+                  "value": "2026-02-03"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Realtime",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/realtime",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "realtime"]
+            }
+          }
+        },
+        {
+          "name": "Funnel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/funnel?range=all",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "funnel"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "all",
+                  "description": "range=1h|1d|3d|7d|1m|3m|6m|1y|all"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }
