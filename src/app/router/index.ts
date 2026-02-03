@@ -7,6 +7,7 @@ import { CaseStudyRouter } from "../module/caseStudy/caseStudy.route";
 import { ProductRouter } from "../module/product/product.route";
 import { CareerRouter } from "../module/career/career.route";
 import { ServiceRouter } from "../module/service/service.route";
+import { AnalyticsRouter } from "../module/analytics/analytics.route";
 
 const router = Router()
 
@@ -42,6 +43,10 @@ const moduleRought = [
     {
         path: '/services',
         route: ServiceRouter
+    },
+    {
+        path: '/analytics',
+        route: AnalyticsRouter
     }
 ]
 

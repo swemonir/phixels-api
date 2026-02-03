@@ -12,7 +12,23 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://rurally-unparticular-lilliana.ngrok-free.dev'],
+    origin: (origin, callback) => {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+        const allowed = [
+            'http://localhost:5173',
+            'http://localhost:5174',
+            'http://localhost:5175',
+            'https://rurally-unparticular-lilliana.ngrok-free.dev'
+        ];
+        if (allowed.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+        callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
