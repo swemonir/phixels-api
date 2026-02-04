@@ -1178,7 +1178,15 @@
                 }
               ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"message\": \"Analytics overview retrieved\",\n  \"data\": {\n    \"totalVisits\": 12450,\n    \"conversions\": 520,\n    \"bounceRate\": 42.3,\n    \"avgDuration\": 204,\n    \"totalLeads\": 142,\n    \"pendingLeads\": 28,\n    \"bookedLeads\": 114,\n    \"conversionRate\": 80.2,\n    \"realtimeUsers\": 42,\n    \"clickCounts\": {\n      \"gmail\": 32,\n      \"whatsapp\": 58,\n      \"fiverr\": 14,\n      \"linkedin\": 21,\n      \"facebook\": 9,\n      \"emailOpens\": 12\n    }\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Overview (Custom Range)",
@@ -1228,6 +1236,114 @@
                   "key": "range",
                   "value": "all",
                   "description": "range=1h|1d|3d|7d|1m|3m|6m|1y|all"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Traffic Series",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/traffic?range=7d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "traffic"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "7d"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Top Pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/top-pages?range=7d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "top-pages"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "7d"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Top Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/top-cities?range=7d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "top-cities"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "7d"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Top Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/top-countries?range=7d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "top-countries"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "7d"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/devices?range=7d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "devices"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "7d"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Traffic Sources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/traffic-sources?range=7d",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "traffic-sources"],
+              "query": [
+                {
+                  "key": "range",
+                  "value": "7d"
                 }
               ]
             }

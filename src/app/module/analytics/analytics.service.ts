@@ -148,6 +148,11 @@ const createEventsIntoDB = async (events: TAnalyticsEvent[]) => {
 const getOverviewFromDB = async (params: TRangeParams) => {
   const match = buildRangeMatch(params);
 
+  const totalVisits = await AnalyticsEvent.countDocuments({
+    ...match,
+    eventType: 'page_view',
+  });
+
   const totalLeads = await countDistinctSessions({
     ...match,
     eventType: 'lead_submitted',
@@ -161,12 +166,47 @@ const getOverviewFromDB = async (params: TRangeParams) => {
   const pendingLeads = Math.max(totalLeads - bookedLeads, 0);
   const conversionRate = totalLeads > 0 ? Number(((bookedLeads / totalLeads) * 100).toFixed(2)) : 0;
 
+  const conversions = bookedLeads;
+
+  const sessionPages = await AnalyticsEvent.aggregate([
+    { $match: { ...match, eventType: 'page_view' } },
+    { $group: { _id: '$sessionId', pageViews: { $sum: 1 } } },
+  ]);
+  const bouncedSessions = sessionPages.filter((s) => s.pageViews === 1).length;
+  const bounceRate =
+    sessionPages.length > 0
+      ? Number(((bouncedSessions / sessionPages.length) * 100).toFixed(2))
+      : 0;
+
+  const sessionDurations = await AnalyticsEvent.aggregate([
+    { $match: match },
+    {
+      $group: {
+        _id: '$sessionId',
+        firstEvent: { $min: '$eventAt' },
+        lastEvent: { $max: '$eventAt' },
+      },
+    },
+    {
+      $project: {
+        durationMs: { $subtract: ['$lastEvent', '$firstEvent'] },
+      },
+    },
+  ]);
+  const totalDurationMs = sessionDurations.reduce(
+    (sum, session) => sum + (session.durationMs || 0),
+    0,
+  );
+  const avgDurationMs =
+    sessionDurations.length > 0 ? totalDurationMs / sessionDurations.length : 0;
+  const avgDuration = Math.round(avgDurationMs / 1000);
+
   const clickCountsAgg = await AnalyticsEvent.aggregate([
     {
       $match: {
         ...match,
         eventType: 'click',
-        channel: { $in: ['gmail', 'whatsapp', 'fiverr'] },
+        channel: { $in: ['gmail', 'whatsapp', 'fiverr', 'linkedin', 'facebook'] },
       },
     },
     {
@@ -179,8 +219,21 @@ const getOverviewFromDB = async (params: TRangeParams) => {
       acc[item._id] = item.count;
       return acc;
     },
-    { gmail: 0, whatsapp: 0, fiverr: 0 } as Record<string, number>,
+    {
+      gmail: 0,
+      whatsapp: 0,
+      fiverr: 0,
+      linkedin: 0,
+      facebook: 0,
+      emailOpens: 0,
+    } as Record<string, number>,
   );
+
+  const emailOpenCount = await AnalyticsEvent.countDocuments({
+    ...match,
+    eventType: 'email_open',
+  });
+  clickCounts.emailOpens = emailOpenCount;
 
   const realtimeSince = new Date(Date.now() - 5 * 60 * 1000);
   const realtimeUsers = await countDistinctSessions({
@@ -225,6 +278,10 @@ const getOverviewFromDB = async (params: TRangeParams) => {
   const notifications = await buildNotifications();
 
   return {
+    totalVisits,
+    conversions,
+    bounceRate,
+    avgDuration,
     totalLeads,
     pendingLeads,
     bookedLeads,
@@ -280,10 +337,279 @@ const getRealtimeFromDB = async () => {
   };
 };
 
+const getTrafficSeriesFromDB = async (params: TRangeParams) => {
+  const match = buildRangeMatch(params);
+
+  const [visits, conversions] = await Promise.all([
+    AnalyticsEvent.aggregate([
+      { $match: { ...match, eventType: 'page_view' } },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$eventAt' },
+          },
+          visitors: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]),
+    AnalyticsEvent.aggregate([
+      { $match: { ...match, eventType: 'meeting_booked' } },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$eventAt' },
+          },
+          conversions: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]),
+  ]);
+
+  const conversionMap = conversions.reduce((acc, item) => {
+    acc[item._id] = item.conversions;
+    return acc;
+  }, {} as Record<string, number>);
+
+  return visits.map((item) => ({
+    name: item._id,
+    visitors: item.visitors,
+    conversions: conversionMap[item._id] || 0,
+  }));
+};
+
+const getTopPagesFromDB = async (params: TRangeParams) => {
+  const match = buildRangeMatch(params);
+  const pages = await AnalyticsEvent.aggregate([
+    { $match: { ...match, eventType: 'page_view', pagePath: { $ne: null } } },
+    { $group: { _id: '$pagePath', visits: { $sum: 1 } } },
+    { $sort: { visits: -1 } },
+    { $limit: 10 },
+  ]);
+
+  const conversionCounts = await AnalyticsEvent.aggregate([
+    { $match: { ...match, eventType: 'meeting_booked' } },
+    { $group: { _id: '$pagePath', conversions: { $sum: 1 } } },
+  ]);
+  const conversionMap = conversionCounts.reduce((acc, item) => {
+    if (item._id) acc[item._id] = item.conversions;
+    return acc;
+  }, {} as Record<string, number>);
+
+  return pages.map((page) => ({
+    path: page._id,
+    visits: page.visits,
+    avgTime: null,
+    bounce: null,
+    conversions: conversionMap[page._id] || 0,
+  }));
+};
+
+const getDeviceBreakdownFromDB = async (params: TRangeParams) => {
+  const match = buildRangeMatch(params);
+  const deviceCounts = await AnalyticsEvent.aggregate([
+    { $match: { ...match, eventType: 'page_view' } },
+    { $group: { _id: '$deviceType', count: { $sum: 1 } } },
+  ]);
+
+  return deviceCounts.reduce((acc, item) => {
+    const key = item._id || 'unknown';
+    acc[key] = item.count;
+    return acc;
+  }, {} as Record<string, number>);
+};
+
+const getTopCitiesFromDB = async (params: TRangeParams) => {
+  const match = buildRangeMatch(params);
+  const cities = await AnalyticsEvent.aggregate([
+    {
+      $match: {
+        ...match,
+        city: { $ne: null },
+        country: { $ne: null },
+      },
+    },
+    {
+      $group: {
+        _id: { city: '$city', country: '$country' },
+        visitors: { $sum: 1 },
+      },
+    },
+    { $sort: { visitors: -1 } },
+    { $limit: 10 },
+  ]);
+
+  return cities.map((item) => ({
+    name: item._id.city,
+    country: item._id.country,
+    visitors: item.visitors,
+  }));
+};
+
+const getTopCountriesFromDB = async (params: TRangeParams) => {
+  const match = buildRangeMatch(params);
+  const countries = await AnalyticsEvent.aggregate([
+    {
+      $match: {
+        ...match,
+        country: { $ne: null },
+      },
+    },
+    {
+      $group: {
+        _id: '$country',
+        visitors: { $sum: 1 },
+        conversions: {
+          $sum: {
+            $cond: [{ $eq: ['$eventType', 'meeting_booked'] }, 1, 0],
+          },
+        },
+      },
+    },
+    { $sort: { visitors: -1 } },
+    { $limit: 10 },
+  ]);
+
+  return countries.map((item) => ({
+    code: item._id,
+    name: item._id,
+    visitors: item.visitors,
+    conversions: item.conversions,
+    rate: item.visitors > 0 ? (item.conversions / item.visitors) * 100 : 0,
+    trend: 'neutral',
+  }));
+};
+
+const getTrafficSourcesFromDB = async (params: TRangeParams) => {
+  const match = buildRangeMatch(params);
+
+  const basePipeline = [
+    {
+      $addFields: {
+        utmMediumLower: { $toLower: { $ifNull: ['$utmMedium', ''] } },
+        referrerLower: { $toLower: { $ifNull: ['$referrer', ''] } },
+      },
+    },
+    {
+      $addFields: {
+        source: {
+          $switch: {
+            branches: [
+              {
+                case: {
+                  $regexMatch: {
+                    input: '$utmMediumLower',
+                    regex: /(email)/,
+                  },
+                },
+                then: 'Email',
+              },
+              {
+                case: {
+                  $regexMatch: {
+                    input: '$utmMediumLower',
+                    regex: /(cpc|ppc|paid|ads|ad)/,
+                  },
+                },
+                then: 'Paid Ads',
+              },
+              {
+                case: {
+                  $or: [
+                    {
+                      $regexMatch: {
+                        input: '$utmMediumLower',
+                        regex: /(social)/,
+                      },
+                    },
+                    {
+                      $regexMatch: {
+                        input: '$referrerLower',
+                        regex: /(facebook|instagram|linkedin|twitter|tiktok)/,
+                      },
+                    },
+                  ],
+                },
+                then: 'Social Media',
+              },
+              {
+                case: {
+                  $or: [
+                    {
+                      $regexMatch: {
+                        input: '$utmMediumLower',
+                        regex: /(organic)/,
+                      },
+                    },
+                    {
+                      $regexMatch: {
+                        input: '$referrerLower',
+                        regex: /(google|bing|yahoo|duckduckgo)/,
+                      },
+                    },
+                  ],
+                },
+                then: 'Organic Search',
+              },
+              {
+                case: {
+                  $eq: ['$referrerLower', ''],
+                },
+                then: 'Direct',
+              },
+            ],
+            default: 'Direct',
+          },
+        },
+      },
+    },
+  ];
+
+  const visitorsAgg = await AnalyticsEvent.aggregate([
+    { $match: { ...match, eventType: 'page_view' } },
+    ...basePipeline,
+    { $group: { _id: '$source', visitors: { $sum: 1 } } },
+  ]);
+
+  const conversionsAgg = await AnalyticsEvent.aggregate([
+    { $match: { ...match, eventType: 'meeting_booked' } },
+    ...basePipeline,
+    { $group: { _id: '$source', conversions: { $sum: 1 } } },
+  ]);
+
+  const conversionMap = conversionsAgg.reduce((acc, item) => {
+    acc[item._id] = item.conversions;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const totalVisitors = visitorsAgg.reduce((sum, item) => sum + item.visitors, 0) || 1;
+
+  return visitorsAgg
+    .map((item) => ({
+      name: item._id,
+      visitors: item.visitors,
+      share: Number(((item.visitors / totalVisitors) * 100).toFixed(1)),
+      conversions: conversionMap[item._id] || 0,
+      conversionRate:
+        item.visitors > 0
+          ? Number((((conversionMap[item._id] || 0) / item.visitors) * 100).toFixed(1))
+          : 0,
+      trend: 0,
+    }))
+    .sort((a, b) => b.visitors - a.visitors);
+};
+
 export const AnalyticsServices = {
   createEventsIntoDB,
   getOverviewFromDB,
   getRealtimeFromDB,
   getFunnelSteps,
+  getTrafficSeriesFromDB,
+  getTopPagesFromDB,
+  getDeviceBreakdownFromDB,
+  getTopCitiesFromDB,
+  getTopCountriesFromDB,
+  getTrafficSourcesFromDB,
   resolveDateRange,
 };

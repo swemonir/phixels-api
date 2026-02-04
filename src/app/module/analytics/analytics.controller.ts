@@ -72,9 +72,105 @@ const getFunnel = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getTrafficSeries = catchAsync(async (req: Request, res: Response) => {
+  const data = await AnalyticsServices.getTrafficSeriesFromDB({
+    range: req.query.range as string | undefined,
+    start: req.query.start as string | undefined,
+    end: req.query.end as string | undefined,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Traffic series retrieved',
+    data,
+  });
+});
+
+const getTopPages = catchAsync(async (req: Request, res: Response) => {
+  const data = await AnalyticsServices.getTopPagesFromDB({
+    range: req.query.range as string | undefined,
+    start: req.query.start as string | undefined,
+    end: req.query.end as string | undefined,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Top pages retrieved',
+    data,
+  });
+});
+
+const getDevices = catchAsync(async (req: Request, res: Response) => {
+  const data = await AnalyticsServices.getDeviceBreakdownFromDB({
+    range: req.query.range as string | undefined,
+    start: req.query.start as string | undefined,
+    end: req.query.end as string | undefined,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Device breakdown retrieved',
+    data,
+  });
+});
+
+const getTopCities = catchAsync(async (req: Request, res: Response) => {
+  const data = await AnalyticsServices.getTopCitiesFromDB({
+    range: req.query.range as string | undefined,
+    start: req.query.start as string | undefined,
+    end: req.query.end as string | undefined,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Top cities retrieved',
+    data,
+  });
+});
+
+const getTopCountries = catchAsync(async (req: Request, res: Response) => {
+  const data = await AnalyticsServices.getTopCountriesFromDB({
+    range: req.query.range as string | undefined,
+    start: req.query.start as string | undefined,
+    end: req.query.end as string | undefined,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Top countries retrieved',
+    data,
+  });
+});
+
+const getTrafficSources = catchAsync(async (req: Request, res: Response) => {
+  const data = await AnalyticsServices.getTrafficSourcesFromDB({
+    range: req.query.range as string | undefined,
+    start: req.query.start as string | undefined,
+    end: req.query.end as string | undefined,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Traffic sources retrieved',
+    data,
+  });
+});
+
 export const AnalyticsController = {
   createEvents,
   getOverview,
   getRealtime,
   getFunnel,
+  getTrafficSeries,
+  getTopPages,
+  getDevices,
+  getTopCities,
+  getTopCountries,
+  getTrafficSources,
 };
