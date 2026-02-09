@@ -21,6 +21,7 @@ app.use(cors({
             'http://localhost:5173',
             'http://localhost:5174',
             'http://localhost:5175',
+            'https://phixels-admin.vercel.app',
             'https://rurally-unparticular-lilliana.ngrok-free.dev'
         ];
         if (allowed.includes(origin)) {
